@@ -12,8 +12,9 @@ exports.registrationSchema = {
   type: 'object',
   properties: {
     email: { type: 'string', format: 'email' },
-    password: { type: 'string', minLength: 4 }
+    password: { type: 'string', minLength: 4 },
+    name: { type: 'string' }
   },
-  required: ['email', 'password'],
+  required: ['email', 'password', 'name'],
   additionalProperties: false
 }

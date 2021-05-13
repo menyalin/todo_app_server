@@ -1,3 +1,5 @@
+const { Task } = require('../../models')
+
 module.exports.get = (req, res) => {
   res.send('task get end-point')
 }
@@ -7,8 +9,10 @@ module.exports.getById = (req, res) => {
   res.send(`task GetById end-point, ${taskId}`)
 }
 
-module.exports.create = (req, res) => {
-  res.send('task POST end-point')
+module.exports.create = async (req, res) => {
+  const newTask = new Task({ content: req.body.content })
+  await newTask.save()
+  res.json(newTask)
 }
 
 module.exports.update = (req, res) => {
