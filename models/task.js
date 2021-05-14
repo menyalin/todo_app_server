@@ -9,6 +9,18 @@ const taskSchema = new Schema({
   completed: {
     type: Boolean,
     default: false
+  },
+  order: {
+    type: Number,
+    default: 0
+  },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  createdAt: {
+    type: Date,
+    default: () => Date()
   }
 })
 

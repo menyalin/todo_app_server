@@ -8,6 +8,7 @@
   "dependencies": {
     "ajv": "^6.12.6",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "dotenv": "^9.0.2",
     "express": "~4.16.1",

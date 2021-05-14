@@ -1,7 +1,12 @@
 const { Task } = require('../../models')
 
-module.exports.get = (req, res) => {
-  res.send('task get end-point')
+module.exports.get = async (req, res) => {
+  try {
+    const tasks = await Task.find({ user: req.userId })
+    res.status(200).json({ data: tasks })
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
 }
 
 module.exports.getById = (req, res) => {
@@ -10,17 +15,54 @@ module.exports.getById = (req, res) => {
 }
 
 module.exports.create = async (req, res) => {
-  const newTask = new Task({ content: req.body.content })
-  await newTask.save()
-  res.json(newTask)
+  try {
+    const newTask = await Task.create({
+      ...req.body,
+      user: req.userId
+    })
+    res.status(201).json({
+      data: newTask
+    })
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
 }
 
-module.exports.update = (req, res) => {
-  const { taskId } = req.params
-  res.send(`task PUT end-point, ${taskId}`)
+module.exports.update = async (req, res) => {
+  try {
+    const { taskId } = req.params
+    const updatedTask = await Task.findByIdAndUpdate(taskId, req.body)
+    res.status(200).json({ data: updatedTask })
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
 }
 
-module.exports.remove = (req, res) => {
-  const { taskId } = req.params
-  res.send(`task DELETE end-point, ${taskId}`)
+module.exports.remove = async (req, res) => {
+  try {
+    const { taskId } = req.params
+    await Task.deleteOne({ _id: taskId, user: req.userId })
+    res.status(200).json({ message: 'Ok' })
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
+}
+
+module.exports.updateGroup = async (req, res) => {
+  try {
+    const tasks = req.body
+    const bulkQuery = []
+    for (let i = 0; i < tasks.length; i++) {
+      bulkQuery.push({
+        updateOne: {
+          filter: { _id: tasks[i]._id },
+          update: tasks[i]
+        }
+      })
+    }
+    const data = await Task.bulkWrite(bulkQuery)
+    res.status(202).json(data)
+  } catch (e) {
+    res.status(500).json({ message: e.message })
+  }
 }

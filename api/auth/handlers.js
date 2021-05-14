@@ -6,7 +6,7 @@ exports.login = async (req, res) => {
     const tmpUser = await User.findOne({ email })
     if (!!tmpUser && (await tmpUser.isCorrectPassword(password))) {
       res.status(201).json({ token: await tmpUser.createToken() })
-    } else res.status(400).json({ message: 'user not found' })
+    } else res.status(404).json({ message: 'user not found' })
   } catch (e) {
     res.status(500).json({ message: e.message })
   }
@@ -20,7 +20,7 @@ exports.registration = async (req, res) => {
     })
   } catch (e) {
     let status = 500
-    if (e.code === 11000) status = 400
+    if (e.code === 11000) status = 406
     res.status(status).json({ message: e.message })
   }
 }

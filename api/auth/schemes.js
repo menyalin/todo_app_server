@@ -13,7 +13,7 @@ exports.registrationSchema = {
   properties: {
     email: { type: 'string', format: 'email' },
     password: { type: 'string', minLength: 4 },
-    name: { type: 'string' }
+    name: { type: 'string', minLength: 1 }
   },
   required: ['email', 'password', 'name'],
   additionalProperties: false
