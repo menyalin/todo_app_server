@@ -2,16 +2,17 @@ const { Task } = require('../../models')
 
 module.exports.get = async (req, res) => {
   try {
-    const tasks = await Task.find({ user: req.userId })
+    const tasks = await Task.find({
+      user: req.userId,
+      date: {
+        $gte: req.query.startDate,
+        $lte: req.query.endDate
+      }
+    })
     res.status(200).json({ data: tasks })
   } catch (e) {
     res.status(500).json({ message: e.message })
   }
-}
-
-module.exports.getById = (req, res) => {
-  const { taskId } = req.params
-  res.send(`task GetById end-point, ${taskId}`)
 }
 
 module.exports.create = async (req, res) => {
